@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bases de Datos SQL - Guía Completa</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --text-color: #333;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        h3 {
+            color: var(--dark-color);
+            margin: 1.5rem 0 0.8rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        nav {
+            background-color: var(--dark-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        
+        nav li {
+            margin: 0;
+        }
+        
+        nav a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        section {
+            padding: 2rem 0;
+            background-color: white;
+            margin-bottom: 2rem;
+            border-radius: 5px;
+            box-shadow: var(--shadow);
+        }
+        
+        .section-container {
+            padding: 0 2rem;
+        }
+        
+        .card {
+            background-color: var(--light-color);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .feature {
+            background-color: var(--light-color);
+            padding: 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature h3 {
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature h3::before {
+            content: "✓";
+            margin-right: 0.5rem;
+            color: var(--secondary-color);
+        }
+        
+        .sql-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .sql-type {
+            flex: 1;
+            min-width: 200px;
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 5px;
+        }
+        
+        .sql-type h3 {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .acid-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .acid-principle {
+            flex: 1;
+            min-width: 200px;
+            background-color: var(--light-color);
+            padding: 1.5rem;
+            border-radius: 5px;
+            border-top: 4px solid var(--accent-color);
+        }
+        
+        .acid-principle h3 {
+            color: var(--accent-color);
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .sql-types, .acid-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bases de Datos SQL</h1>
+            <p>Todo lo que necesitas saber sobre bases de datos relacionales</p>
+        </div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#introduccion">Introducción</a></li>
+            <li><a href="#definicion">Definición y Propósito</a></li>
+            <li><a href="#estructura">Estructura de Datos</a></li>
+            <li><a href="#comandos">Comandos SQL</a></li>
+            <li><a href="#acid">Propiedades ACID</a></li>
+            <li><a href="#rendimiento">Rendimiento y Escalabilidad</a></li>
+            <li><a href="#estandares">Estándares</a></li>
+        </ul>
+    </nav>
+    
+    <main class="container">
+        <section id="introduccion">
+            <div class="section-container">
+                <h2>Introducción a las Bases de Datos SQL</h2>
+                <p>Las bases de datos SQL, también conocidas como <strong>bases de datos relacionales</strong>, son un pilar fundamental en la gestión de datos, caracterizadas por su estructura y las reglas que rigen su operación.</p>
+                
+                <div class="card">
+                    <h3>¿Por qué son importantes?</h3>
+                    <p>Las bases de datos relacionales son la opción preferida cuando los datos son predecibles en tamaño, estructura y frecuencia de acceso, y cuando las relaciones entre entidades son cruciales para el análisis y la facilidad de uso.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="definicion">
+            <div class="section-container">
+                <h2>Definición y Propósito</h2>
+                
+                <div class="grid">
+                    <div class="feature">
+                        <h3>SQL (Structured Query Language)</h3>
+                        <p>Es un lenguaje de programación diseñado específicamente para administrar y recuperar información de sistemas de gestión de bases de datos relacionales (SGBDR).</p>
+                    </div>
+                    
+                    <div class="feature">
+                        <h3>Objetivo Principal</h3>
+                        <p>Manejar el álgebra y el cálculo relacional para efectuar consultas, permitiendo recuperar y modificar información de manera sencilla.</p>
+                    </div>
+                    
+                    <div class="feature">
+                        <h3>Orígenes</h3>
+                        <p>El término "SQL" fue una abreviatura de su nombre original, SEQUEL (Structured English Query Language), desarrollado por IBM en la década de 1970. Oracle fue el primer proveedor en ofrecer un sistema comercial de SGBDR SQL.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="estructura">
+            <div class="section-container">
+                <h2>Estructura de Datos</h2>
+                
+                <div class="card">
+                    <h3>Formato Tabular</h3>
+                    <p>Las bases de datos relacionales almacenan los datos en un formato tabular, es decir, en tablas compuestas por filas y columnas.</p>
+                </div>
+                
+                <div class="grid">
+                    <div class="feature">
+                        <h3>Columnas</h3>
+                        <p>Cada columna representa un atributo específico de los datos.</p>
+                    </div>
+                    
+                    <div class="feature">
+                        <h3>Filas</h3>
+                        <p>Cada fila representa una instancia de esos datos.</p>
+                    </div>
+                    
+                    <div class="feature">
+                        <h3>Esquema Fijo</h3>
+                        <p>Utilizan un esquema fijo y estricto, lo que significa que todas las filas de una tabla deben seguir la misma estructura predefinida de columnas.</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Relaciones entre Tablas</h3>
+                    <p>Las relaciones entre tablas se establecen mediante:</p>
+                    <ul>
+                        <li><strong>Claves principales (Primary Keys)</strong>: Identifican de forma única una tabla.</li>
+                        <li><strong>Claves externas (Foreign Keys)</strong>: Relacionan filas entre tablas.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="comandos">
+            <div class="section-container">
+                <h2>Lenguaje y Comandos SQL</h2>
+                
+                <p>El lenguaje SQL se compone de varios elementos, como identificadores, variables y condiciones de búsqueda, que forman una instrucción SQL válida.</p>
+                
+                <div class="sql-types">
+                    <div class="sql-type">
+                        <h3>DDL</h3>
+                        <p>Lenguaje de Definición de Datos. Se encarga de diseñar y modificar la estructura de la base de datos (ej., CREATE, ALTER, DROP, TRUNCATE).</p>
+                    </div>
+                    
+                    <div class="sql-type">
+                        <h3>DQL</h3>
+                        <p>Lenguaje de Consulta de Datos. Se utiliza para recuperar datos almacenados (ej., SELECT).</p>
+                    </div>
+                    
+                    <div class="sql-type">
+                        <h3>DML</h3>
+                        <p>Lenguaje de Manipulación de Datos. Permite escribir o modificar registros existentes (ej., INSERT, UPDATE, DELETE).</p>
+                    </div>
+                    
+                    <div class="sql-type">
+                        <h3>DCL</h3>
+                        <p>Lenguaje de Control de Datos. Administra o autoriza el acceso a la base de datos (ej., GRANT).</p>
+                    </div>
+                    
+                    <div class="sql-type">
+                        <h3>TCL</h3>
+                        <p>Lenguaje de Control de Transacciones. Permite controlar los cambios en la base de datos de forma automática (ej., ROLLBACK).</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Procesamiento de Consultas</h3>
+                    <p>Los SGBDR procesan las consultas SQL a través de:</p>
+                    <ul>
+                        <li>Un <strong>analizador</strong>: Verifica la corrección y autorización de la instrucción.</li>
+                        <li>Un <strong>motor relacional</strong>: Crea un plan eficiente para la manipulación de datos.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <section id="acid">
+            <div class="section-container">
+                <h2>Integridad y Transacciones (ACID)</h2>
+                
+                <p>Las bases de datos relacionales siguen estrictamente las propiedades ACID (Atomicidad, Consistencia, Aislamiento y Durabilidad).</p>
+                
+                <div class="acid-container">
+                    <div class="acid-principle">
+                        <h3>Atomicidad</h3>
+                        <p>Garantiza que un conjunto de operaciones se completará siempre de forma conjunta, es decir, todas las operaciones de una transacción se realizan o ninguna.</p>
+                    </div>
+                    
+                    <div class="acid-principle">
+                        <h3>Consistencia</h3>
+                        <p>Asegura que una transacción lleva la base de datos de un estado válido a otro estado válido, manteniendo la precisión y fiabilidad de los datos.</p>
+                    </div>
+                    
+                    <div class="acid-principle">
+                        <h3>Aislamiento</h3>
+                        <p>Garantiza que las operaciones de una transacción son invisibles para otras transacciones hasta que se complete, evitando interferencias.</p>
+                    </div>
+                    
+                    <div class="acid-principle">
+                        <h3>Durabilidad</h3>
+                        <p>Asegura que una vez confirmada una transacción, los cambios persisten incluso en caso de fallos del sistema.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="rendimiento">
+            <div class="section-container">
+                <h2>Rendimiento y Escalabilidad</h2>
+                
+                <div class="card">
+                    <h3>Rendimiento</h3>
+                    <p>El rendimiento de las bases de datos relacionales depende de su subsistema de disco y se puede mejorar optimizando índices, estructuras de tablas y consultas, además de usar SSDs y configuraciones RAID.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Escalabilidad</h3>
+                    <p>Tradicionalmente, el escalado se realiza de forma vertical (añadiendo más recursos de CPU o RAM al servidor). Para cargas de trabajo de solo lectura, se puede escalar horizontalmente duplicando datos; sin embargo, para cargas de lectura y escritura, el escalado horizontal requiere estrategias especiales como la fragmentación y la partición.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="estandares">
+            <div class="section-container">
+                <h2>Estándares e Implementaciones</h2>
+                
+                <div class="card">
+                    <h3>Estandarización</h3>
+                    <p>SQL fue estandarizado por el Instituto Nacional Estadounidense de Estándares (ANSI) en 1986 y por la Organización Internacional de Normalización (ISO) en 1987.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Portabilidad</h3>
+                    <p>A pesar de los estándares, la mayoría de los códigos SQL no son completamente portables entre diferentes sistemas de bases de datos sin ajustes adicionales, debido a la complejidad del estándar, la ambigüedad en la semántica, y la renuencia de los proveedores a abandonar la compatibilidad con versiones anteriores.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Ejemplos Populares</h3>
+                    <p>Algunos SGBDR que utilizan SQL incluyen MySQL, PostgreSQL, Oracle, Microsoft SQL Server, DB2, Informix, Sybase y SQLite.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Página informativa sobre Bases de Datos SQL - Basado en contenido educativo</p>
+        </div>
+    </footer>
+</body>
+</html>
